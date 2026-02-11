@@ -111,7 +111,6 @@ class CustomVirtualKeyboard extends StatelessWidget {
           _row(lignes[0]),
           _row(lignes[1]),
           _row(lignes[2], pad: 15),
-          // Ligne Z-M + backspace
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Row(children: [
@@ -135,7 +134,7 @@ class CustomVirtualKeyboard extends StatelessWidget {
               child: SizedBox(height: 40, child: ElevatedButton(
                 onPressed: () => onKeyTap(" "),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
-                child: Text("espas", style: TextStyle(color: Colors.black)),
+                child: Text("Space", style: TextStyle(color: Colors.black)),
               )),
             )),
             _key("."),
