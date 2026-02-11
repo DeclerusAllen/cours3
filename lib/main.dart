@@ -99,9 +99,11 @@ class CustomVirtualKeyboard extends StatelessWidget {
     child: Row(children: keys.map((k) => _key(k)).toList()),
   );
 
+  //SafeArea pèmèt mwen jere kontni klavye a
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return SafeArea( 
       child: Container(
         padding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 10),
         color: Colors.grey[400],
@@ -170,11 +172,9 @@ class _LoginPageState extends State<LoginPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Koneksyon"),
-      ),
 
       body: Column(
+        
         children: [
           Expanded(
             child: Padding(
@@ -184,9 +184,18 @@ class _LoginPageState extends State<LoginPage>{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                      Text(
+                        "Koneksyon",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 30),
                     TextFormField(
                       controller: emailController,
-                      readOnly: true,  // Empêche le clavier natif
+                      readOnly: true, //mwen sou yon tel fizik, mwen anpeche klavye natif la affiche
                       onTap: () {
                         setState(() {
                           showKeyboard = true;
@@ -210,7 +219,7 @@ class _LoginPageState extends State<LoginPage>{
                     SizedBox(height: 20),
                     TextFormField(
                       controller: passwordController,
-                      readOnly: true,  // Empêche le clavier natif
+                      readOnly: true, 
                       onTap: () {
                         setState(() {
                           showKeyboard = true;
@@ -325,7 +334,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Kreye Kont")),
+      appBar: AppBar(title: Text("Rejwenn Dallbeat")),
       body: Column(
         children: [
           Expanded(
@@ -337,7 +346,7 @@ class _SignupPageState extends State<SignupPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Rejwenn Dallbeat",
+                      "Kreye Kont ou",
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 30),
@@ -465,7 +474,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dallbeat Lakay"),
+        title: Text("Dallbeat"),
       ),
       body: Center(
         child: Column(
