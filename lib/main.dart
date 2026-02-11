@@ -67,8 +67,85 @@ class _SplashScreenState extends State<SplashScreen>{
 
 }
 
+class CustomVirtualKeyboard extends StatelessWidget {
+  final Function(String) onKeyTap;
+  final Function() onBackspace;
+
+  CustomVirtualKeyboard({required this.onKeyTap, required this.onBackspace});
+
+  final lignes = [
+    ["1","2","3","4","5","6","7","8","9","0"],
+    ["q","w","e","r","t","y","u","i","o","p"],
+    ["a","s","d","f","g","h","j","k","l"],
+    ["z","x","c","v","b","n","m"],
+  ];
+
+  Widget _key(String k, {Color? bg}) => Expanded(
+    child: Padding(
+      padding: EdgeInsets.all(2),
+      child: SizedBox(
+        height: 40,
+        child: ElevatedButton(
+          onPressed: () => onKeyTap(k),
+          style: ElevatedButton.styleFrom(backgroundColor: bg ?? Colors.grey[200], padding: EdgeInsets.zero),
+          child: Text(k, style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold)),
+        ),
+      ),
+    ),
+  );
+
+  Widget _row(List<String> keys, {double pad = 0}) => Padding(
+    padding: EdgeInsets.symmetric(horizontal: pad),
+    child: Row(children: keys.map((k) => _key(k)).toList()),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        padding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 10),
+        color: Colors.grey[400],
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          _row(lignes[0]),
+          _row(lignes[1]),
+          _row(lignes[2], pad: 15),
+          // Ligne Z-M + backspace
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Row(children: [
+              ...lignes[3].map((k) => _key(k)),
+              Expanded(child: Padding(
+                padding: EdgeInsets.all(2),
+                child: SizedBox(height: 40, child: ElevatedButton(
+                  onPressed: onBackspace,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[300], padding: EdgeInsets.zero),
+                  child: Icon(Icons.backspace, color: Colors.black, size: 20),
+                )),
+              )),
+            ]),
+          ),
+
+
+          Row(children: [
+            _key("@"),
+            Expanded(flex: 4, child: Padding(
+              padding: EdgeInsets.all(2),
+              child: SizedBox(height: 40, child: ElevatedButton(
+                onPressed: () => onKeyTap(" "),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                child: Text("espas", style: TextStyle(color: Colors.black)),
+              )),
+            )),
+            _key("."),
+          ]),
+        ]),
+      ),
+    );
+  }
+}
+
 Map<String, String> users = {
-  "test@gmail.com": "12345678",
+  "allen20@gmail.com": "00000000",
 };
 
 class LoginPage extends StatefulWidget {
@@ -80,6 +157,8 @@ class _LoginPageState extends State<LoginPage>{
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool showKeyboard = false;  
+  TextEditingController? activeController;
 
   @override
   void dispose() {
@@ -92,93 +171,131 @@ class _LoginPageState extends State<LoginPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: Text("Koneksyon"),
       ),
 
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value){
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your email";
-                  }
-                  if (!value.contains("@")){
-                    return "Please enter a valid email";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true, //kache kod la
-                validator: (value){
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your password";
-                  }
-                  if (value.length < 8){
-                    return "Password must be at least 8 characters";
-                  }
-                  return null;
-                },
-              ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      controller: emailController,
+                      readOnly: true,  // Empêche le clavier natif
+                      onTap: () {
+                        setState(() {
+                          showKeyboard = true;
+                          activeController = emailController;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Imèl",
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value){
+                        if (value == null || value.isEmpty) {
+                          return "Tanpri antre imèl ou";
+                        }
+                        if (!value.contains("@")){
+                          return "Tanpri antre yon imèl valab";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: passwordController,
+                      readOnly: true,  // Empêche le clavier natif
+                      onTap: () {
+                        setState(() {
+                          showKeyboard = true;
+                          activeController = passwordController;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Modpas",
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                      validator: (value){
+                        if (value == null || value.isEmpty) {
+                          return "Tanpri antre modpas ou";
+                        }
+                        if (value.length < 8){
+                          return "Modpas dwe gen omwen 8 karaktè";
+                        }
+                        return null;
+                      },
+                    ),
 
-              SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: Text("Login"),
-                  onPressed: (){
-                    if (_formKey.currentState!.validate()){
-                      String email = emailController.text;
-                      String password = passwordController.text;
+                    SizedBox(height: 30),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        child: Text("Konekte"),
+                        onPressed: (){
+                          if (_formKey.currentState!.validate()){
+                            String email = emailController.text;
+                            String password = passwordController.text;
 
-                      if (users.containsKey(email) && users[email]== password){
-                        Navigator.pushReplacement(
+                            if (users.containsKey(email) && users[email]== password){
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => HomePage()),
+                                );
+                            } else{
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Imèl oswa modpas pa kòrèk")),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
+
+                    SizedBox(height: 20),
+
+                    TextButton(
+                      child: Text("Ou pa gen kont? Enskri"),
+                      onPressed: (){
+                        Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                      } else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Invalid email or password")),
+                          MaterialPageRoute(builder: (context) => SignupPage()),
                         );
-                      }
-                    }
-                  },
-                ),
-              ),
+                      },
+                    )
 
-              SizedBox(height: 20),
-
-              TextButton(
-                child: Text("Don't have an account? Sign up"),
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignupPage()),
-                  );
-                },
+                  ]
+                )
               )
-
-            ]
-          )
-        )
-      )
-
+            ),
+          ),
+          // Clavier virtuel en bas
+          if (showKeyboard)
+            CustomVirtualKeyboard(
+              onKeyTap: (key) {
+                setState(() {
+                  if (activeController != null) {
+                    activeController!.text += key;
+                  }
+                });
+              },
+              onBackspace: () {
+                setState(() {
+                  if (activeController != null && activeController!.text.isNotEmpty) {
+                    activeController!.text = activeController!.text
+                        .substring(0, activeController!.text.length - 1);
+                  }
+                });
+              },
+            ),
+        ],
+      ),
     );
   }
 
@@ -193,86 +310,150 @@ class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  bool showKeyboard = false;
+  TextEditingController? activeController;
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Create Account")),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Join Dallbeat",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 30),
-              TextFormField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) return "Enter an email";
-                  if (users.containsKey(value)) return "This email already exists";
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.length < 8) return "Min 8 characters";
-                  return null;
-                },
-              ),
-              SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // SIMULATION DE L'ENREGISTREMENT
-                      setState(() {
-                        users[emailController.text] = passwordController.text;
-                      });
+      appBar: AppBar(title: Text("Kreye Kont")),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Rejwenn Dallbeat",
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 30),
+                    TextFormField(
+                      controller: emailController,
+                      readOnly: true,
+                      onTap: () {
+                        setState(() {
+                          showKeyboard = true;
+                          activeController = emailController;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Imèl",
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return "Antre yon imèl";
+                        if (!value.contains("@")) return "Antre yon imèl valab";
+                        if (users.containsKey(value)) return "Imèl sa a deja egziste";
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: passwordController,
+                      readOnly: true,
+                      onTap: () {
+                        setState(() {
+                          showKeyboard = true;
+                          activeController = passwordController;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Modpas",
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.lock),
+                      ),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return "Antre yon modpas";
+                        if (value.length < 8) return "Omwen 8 karaktè";
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: confirmPasswordController,
+                      readOnly: true,
+                      onTap: () {
+                        setState(() {
+                          showKeyboard = true;
+                          activeController = confirmPasswordController;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Konfime Modpas",
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.lock_outline),
+                      ),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return "Konfime modpas ou";
+                        if (value != passwordController.text) return "Modpas yo pa menm";
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 30),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              users[emailController.text] = passwordController.text;
+                            });
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Account created! Please login.")),
-                      );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Kont kreye! Tanpri konekte.")),
+                            );
 
-                      // Retourner à la page de Login après 1 seconde
-                      Timer(Duration(seconds: 1), () {
-                        Navigator.pop(context);
-                      });
-                    }
-                  },
-                  child: Text("Sign Up"),
+                            Timer(Duration(seconds: 1), () {
+                              Navigator.pop(context);
+                            });
+                          }
+                        },
+                        child: Text("Enskri"),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          // Clavier virtuel en bas
+          if (showKeyboard)
+            CustomVirtualKeyboard(
+              onKeyTap: (key) {
+                setState(() {
+                  if (activeController != null) {
+                    activeController!.text += key;
+                  }
+                });
+              },
+              onBackspace: () {
+                setState(() {
+                  if (activeController != null && activeController!.text.isNotEmpty) {
+                    activeController!.text = activeController!.text
+                        .substring(0, activeController!.text.length - 1);
+                  }
+                });
+              },
+            ),
+        ],
       ),
     );
   }
@@ -284,30 +465,18 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dallbeat Home"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              // Retour à la page de login
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-            },
-          ),
-        ],
+        title: Text("Dallbeat Lakay"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Bienvenue sur Dallbeat !",
+              "Byenveni sou Dallbeat !",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            Text("Vous êtes connecté avec succès."),
+            Text("Ou konekte avèk siksè."),
           ],
         ),
       ),
