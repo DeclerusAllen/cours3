@@ -7,6 +7,7 @@ void main() {
 }
 
 class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,8 @@ class MainApp extends StatelessWidget {
 }
 
 class SplashScreen extends StatefulWidget{
+  const SplashScreen({super.key});
+  
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -150,6 +153,8 @@ Map<String, String> users = {
 };
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -204,6 +209,7 @@ class _LoginPageState extends State<LoginPage>{
                       decoration: InputDecoration(
                         labelText: "Imèl",
                         border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.email, color: Colors.blue),
                       ),
                       validator: (value){
                         if (value == null || value.isEmpty) {
@@ -214,7 +220,9 @@ class _LoginPageState extends State<LoginPage>{
                         }
                         return null;
                       },
+                      
                     ),
+
                     SizedBox(height: 20),
                     TextFormField(
                       controller: passwordController,
@@ -228,6 +236,7 @@ class _LoginPageState extends State<LoginPage>{
                       decoration: InputDecoration(
                         labelText: "Modpas",
                         border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.lock, color: Colors.blue),
                       ),
                       obscureText: true,
                       validator: (value){
@@ -310,6 +319,8 @@ class _LoginPageState extends State<LoginPage>{
 }
 
 class SignupPage extends StatefulWidget {
+
+  const SignupPage({super.key});
   @override
   State<SignupPage> createState() => _SignupPageState();
 }
@@ -361,7 +372,7 @@ class _SignupPageState extends State<SignupPage> {
                       decoration: InputDecoration(
                         labelText: "Imèl",
                         border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.email),
+                        prefixIcon: Icon(Icons.email, color: Colors.blue),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) return "Antre yon imèl";
@@ -383,7 +394,7 @@ class _SignupPageState extends State<SignupPage> {
                       decoration: InputDecoration(
                         labelText: "Modpas",
                         border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.lock),
+                        prefixIcon: Icon(Icons.lock, color: Colors.blue),
                       ),
                       obscureText: true,
                       validator: (value) {
@@ -405,7 +416,7 @@ class _SignupPageState extends State<SignupPage> {
                       decoration: InputDecoration(
                         labelText: "Konfime Modpas",
                         border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.lock_outline),
+                        prefixIcon: Icon(Icons.lock_outline, color: Colors.blue),
                       ),
                       obscureText: true,
                       validator: (value) {
@@ -469,6 +480,8 @@ class _SignupPageState extends State<SignupPage> {
 
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
