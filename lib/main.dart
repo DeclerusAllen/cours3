@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen>{
             ),
             SizedBox(height: 20),
             Text(
-              "Dallbeat",
+              "Allen Records",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -188,15 +188,22 @@ class _LoginPageState extends State<LoginPage>{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                      Text(
-                        "Koneksyon",
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
+                    // Logo en haut
+                    Image.asset(
+                      "assets/images/logo.png",
+                      width: 80,
+                      height: 80,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "Koneksyon",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 30),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 30),
                     TextFormField(
                       controller: emailController,
                       readOnly: true, //mwen sou yon tel fizik, mwen anpeche klavye natif la affiche
@@ -278,7 +285,7 @@ class _LoginPageState extends State<LoginPage>{
                     SizedBox(height: 20),
 
                     TextButton(
-                      child: Text("Ou pa gen kont? Enskri"),
+                      child: Text("Ou pa gen kont Enskri"),
                       onPressed: (){
                         Navigator.push(
                           context,
@@ -453,7 +460,8 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
           ),
-          // Clavier virtuel en bas
+
+
           if (showKeyboard)
             CustomVirtualKeyboard(
               onKeyTap: (key) {
@@ -486,18 +494,18 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dallbeat"),
+        title: Text("Allen"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Byenveni sou Dallbeat !",
+              "Byenveni sou Allen Recors !",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            Text("Ou konekte avèk siksè."),
+            Text("Ou konekte avèk sisè."),
           ],
         ),
       ),
