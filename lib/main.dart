@@ -292,7 +292,7 @@ class _LoginPageState extends State<LoginPage>{
               )
             ),
           ),
-          // Clavier virtuel en bas
+          
           if (showKeyboard)
             CustomVirtualKeyboard(
               onKeyTap: (key) {
